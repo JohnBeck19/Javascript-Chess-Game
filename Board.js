@@ -1,3 +1,4 @@
+
 const startBoard = (game, options = { playAgainst: 'human', aiColor: 'black', aiLevel: 'dumb' }) => {
 
     const aiPlayer = options.playAgainst === 'ai' ? ai(options.aiColor) : null;
@@ -102,6 +103,7 @@ const startBoard = (game, options = { playAgainst: 'human', aiColor: 'black', ai
 
     game.pieces.forEach( piece => {
         const pieceImg = document.getElementById(piece.name);
+        console.log(pieceImg);
         pieceImg.addEventListener("drop", function () {
             const square = document.getElementById(piece.position);
             movePiece(square);
@@ -211,7 +213,7 @@ const pieces = [
     { rank: 'rook', position: 88, color: 'black', name: 'blackRook2', ableToCastle: true },
     { rank: 'king', position: 85, color: 'black', name: 'blackKing', ableToCastle: true },
 ];
-const game = new Game(pieces, 'white');
+var game;
 
 const startNewGame = () => {
     document.querySelectorAll('.scene').forEach( scene => scene.classList.remove('show') );
@@ -220,9 +222,96 @@ const startNewGame = () => {
     const humanColor = document.querySelector('input[name="human_color"]:checked')?.value;
     const aiColor = humanColor === 'white' ? 'black' : 'white';
     const aiLevel = 'dumb';
-    
+    const chess960 = document.querySelector('input[name="960"]:checked')?.value;
+    if (chess960) {
+        const pieces960 = get960Pieces();
+        game = new Game(pieces960, 'white');
+        console.log(game.pieces);
+    }
+    else
+    {
+        game = new Game(pieces, 'white');
+    }
     startBoard(game, {playAgainst, aiColor, aiLevel});
+}
+
+function get960Pieces() {
+
+
+    function getRandomNum() {   
+        let num;
+        do {
+            num = Math.floor(Math.random() * 8) + 1; 
+        } while (placedSquares.includes(num)); 
+        placedSquares.push(num); 
+        return num;
+    }
+
+    function getRandomPos()
+    {
+        placedSquares = [];
+        knight1pos = getRandomNum();
+        knight2pos = getRandomNum();
+        queenpos = getRandomNum();
+        bishop1pos = getRandomNum();
+        bishop2pos = getRandomNum();
+        rook1pos = getRandomNum();
+        rook2pos = getRandomNum();
+        kingpos = getRandomNum();
+    }
+
+    do {
+        getRandomPos();
+    } while (!((kingpos > rook1pos && kingpos < rook2pos) || (kingpos < rook1pos && kingpos > rook2pos)) || (bishop1pos % 2 == bishop2pos % 2));
+
+    const pieces960 = [
+
+
+        { rank: 'knight', position: knight1pos+10, color: 'white', name: 'whiteKnight1' },
+        { rank: 'knight', position: knight2pos+10, color: 'white', name: 'whiteKnight2' },
+        { rank: 'queen', position: queenpos+10, color: 'white', name: 'whiteQueen' },
+        { rank: 'bishop', position: bishop1pos+10, color: 'white', name: 'whiteBishop1' },
+        { rank: 'bishop', position: bishop2pos+10, color: 'white', name: 'whiteBishop2' },
+        { rank: 'rook', position: rook1pos+10, color: 'white', name: 'whiteRook1', ableToCastle: true },
+        { rank: 'rook', position: rook2pos+10, color: 'white', name: 'whiteRook2', ableToCastle: true },
+        { rank: 'king', position: kingpos+10, color: 'white', name: 'whiteKing', ableToCastle: true },
+    
+
+
+        { rank: 'knight', position: knight1pos+80, color: 'black', name: 'blackKnight1' },
+        { rank: 'knight', position: knight2pos+80, color: 'black', name: 'blackKnight2' },
+        { rank: 'queen', position: queenpos+80, color: 'black', name: 'blackQueen' },
+        { rank: 'bishop', position:  bishop1pos+80, color: 'black', name: 'blackBishop1' },
+        { rank: 'bishop', position: bishop2pos+80, color: 'black', name: 'blackBishop2' },
+        { rank: 'rook', position: rook1pos+80, color: 'black', name: 'blackRook1', ableToCastle: true },
+        { rank: 'rook', position: rook2pos+80, color: 'black', name: 'blackRook2', ableToCastle: true },
+        { rank: 'king', position: kingpos+80, color: 'black', name: 'blackKing', ableToCastle: true },
+
+        //pawns stay the same
+        { rank: 'pawn', position: 74, color: 'black', name: 'blackPawn4' },
+        { rank: 'pawn', position: 75, color: 'black', name: 'blackPawn5' },
+        { rank: 'pawn', position: 76, color: 'black', name: 'blackPawn6' },
+        { rank: 'pawn', position: 71, color: 'black', name: 'blackPawn1' },
+        { rank: 'pawn', position: 72, color: 'black', name: 'blackPawn2' },
+        { rank: 'pawn', position: 73, color: 'black', name: 'blackPawn3' },
+        { rank: 'pawn', position: 77, color: 'black', name: 'blackPawn7' },
+        { rank: 'pawn', position: 78, color: 'black', name: 'blackPawn8' },
+        { rank: 'pawn', position: 24, color: 'white', name: 'whitePawn4' },
+        { rank: 'pawn', position: 25, color: 'white', name: 'whitePawn5' },
+        { rank: 'pawn', position: 26, color: 'white', name: 'whitePawn6' },
+        { rank: 'pawn', position: 21, color: 'white', name: 'whitePawn1' },
+        { rank: 'pawn', position: 22, color: 'white', name: 'whitePawn2' },
+        { rank: 'pawn', position: 23, color: 'white', name: 'whitePawn3' },
+        { rank: 'pawn', position: 27, color: 'white', name: 'whitePawn7' },
+        { rank: 'pawn', position: 28, color: 'white', name: 'whitePawn8' },
+
+    ];
+    return pieces960;
 }
 
 const showColorSelect = () => document.querySelector('.select-color-container').classList.add('show');
 const hideColorSelect = () => document.querySelector('.select-color-container').classList.remove('show');
+
+
+
+module.exports = { get960Pieces };

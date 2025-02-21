@@ -21,7 +21,14 @@
 			<input type="radio" name="oponent" id="aiOponent" value="ai" onchange="changeColorSelect()">
 			<label for="aiOponent">AI</label>
 		</div>
-		
+		<div style="margin-bottom: 50px;">
+			<h2>960?</h2>
+			<input type="radio" name="960" id="yes960" value= True onchange="changeColorSelect()" checked>
+			<label for="yes960">Yes</label>
+			&ensp;
+			<input type="radio" name="960" id="no960" value= False onchange="changeColorSelect()">
+			<label for="no960">No</label>
+		</div>
 		<div class="select-color-container" style="margin-bottom: 50px;display: none;">
 			<h2>Select Your Color</h2>
 			<input type="radio" name="human_color" id="humanColorWhite" value="white" checked>
@@ -263,5 +270,18 @@
 	changeColorSelect();
 </script>
 
+<script>
+	const changeColorSelect960 = () => {
+		const playAgainst = document.querySelector('input[name="960"]:checked').value;
+		if (playAgainst === 'ai') {
+			showColorSelect();
+		}
+		else {
+			hideColorSelect();
+		}		
+	}
+
+	changeColorSelect960();
+</script>
 </body>
 </html>

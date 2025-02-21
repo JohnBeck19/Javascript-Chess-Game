@@ -373,3 +373,4 @@ class Game {
 		this.clearEvents();
 	}
 }
+
